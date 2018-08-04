@@ -1,113 +1,136 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.24;
 
 ///@title myoffspring
 ///@author andersonassis83 - adeassis@htmlcoin.team
 
 contract myoffspring{
-    
+
     address owner;
     
     struct Heir{
         bool stored;
         address sender;
         string heirFullName;
-        uint dateOfBirth;
-        uint timeOfBirth;
-        string place;
         string motherFullName;
         string fatherFullName;
-
+        uint dateOfBirth;
+        uint timeOfBirth;
+        string placeOfBirth;
     }
 
     mapping(string => Heir) internal documents;
 
     event DocumentEvent(string hash);
     
-    constructor() public{
+    constructor() 
+    public{
         owner = msg.sender;
     }
     
-     ///@dev Defines the main wallets for the application to work
+    ///@dev Handles any funds sent to the contract by mistake
     
-    function empty() public{
+    function empty() 
+    public{
         owner.transfer(address(this).balance);
     }
     
-    ///@dev Defines the main wallets for the application to work
-    ///@param hash
-    ///@param heirFullName:
-    ///@param dateOfBirth:
-    ///@param timeOfBirth:
-    ///@param place:
-    ///@param motherFullName:
-    ///@param fatherFullName:
+    ///@dev Adds a new "document" to the blockchain containing all Heir's birth attributes. To be used internally only.
+    ///@param hash An unique hash based on all Heir attributes. Should be encrypted externally.
+    ///@param heirFullName The full name of the Heir.
+    ///@param motherFullName Heir's mother full name.
+    ///@param fatherFullName Heir's father full name.
+    ///@param dateOfBirth Heir's date of birth in the format YYYYMMDD
+    ///@param timeOfBirth Heir's time of birth in the format HH24mmss
+    ///@param placeOfBirth Heir's place of birth. Preferrable format: City, State, Country
     
-    function addDocument(string hash, string heirFullName, uint dateOfBirth, uint timeOfBirth,
-                         string place, string motherFullName, string fatherFullName) internal{
-                             
+    function addDocument(string hash, 
+                         string heirFullName, 
+                         string motherFullName, 
+                         string fatherFullName, 
+                         uint dateOfBirth, 
+                         uint timeOfBirth, 
+                         string placeOfBirth) 
+    internal{
+        
+        require(bytes(hash).length > 0);
+        require(bytes(heirFullName).length > 0);
+        require(dateOfBirth > 0);
+        
         documents[hash].stored = true;
         documents[hash].sender = msg.sender;
-        documents[hash].dateOfBirth = dateOfBirth;
-        documents[hash].timeOfBirth = timeOfBirth;
         documents[hash].heirFullName = heirFullName;
-        documents[hash].place = place;
         documents[hash].motherFullName = motherFullName;
         documents[hash].fatherFullName = fatherFullName;
-       
+        documents[hash].dateOfBirth = dateOfBirth;
+        documents[hash].timeOfBirth = timeOfBirth;
+        documents[hash].placeOfBirth = placeOfBirth;    
     }
     
+    ///@dev Checks if that Heir has already been added to the blockchain. 
+    //      If not, calls the addDocument function.
+    ///@param hash An unique hash based on all Heir attributes. Should be encrypted externally.
+    ///@param heirFullName The full name of the Heir.
+    ///@param motherFullName Heir's mother full name.
+    ///@param fatherFullName Heir's father full name.
+    ///@param dateOfBirth Heir's date of birth in the format YYYYMMDD
+    ///@param timeOfBirth Heir's time of birth in the format HH24mmss
+    ///@param placeOfBirth Heir's place of birth. Preferrable format: City, State, Country
     
-    ///@dev Defines the main wallets for the application to work
-    ///@param hash
-    ///@param heirFullName:
-    ///@param dateOfBirth:
-    ///@param timeOfBirth:
-    ///@param place:
-    ///@param motherFullName:
-    ///@param fatherFullName:
+    function newDocument(string hash, 
+                         string heirFullName,
+                         string motherFullName, 
+                         string fatherFullName,
+                         uint dateOfBirth, 
+                         uint timeOfBirth, 
+                         string placeOfBirth) 
+    external 
+    returns(string result){
     
-    function newDocument(string hash, string heirFullName, uint dateOfBirth, uint timeOfBirth, string place, string motherFullName, 
-                         string fatherFullName) external returns(bool success){
-
         if(documents[hash].stored){
 
-            success = false;
+            result = "Hash is already registered.";
 
         } else {
 
-            addDocument(hash, heirFullName, dateOfBirth, timeOfBirth, place, motherFullName,fatherFullName);
+            addDocument(hash, heirFullName, motherFullName, fatherFullName, dateOfBirth, timeOfBirth, placeOfBirth);
                         
             emit DocumentEvent(hash);
             
-            success = true;
+            result = "Heir registered successfully";
 
         }
         
-        return success;
+        return result;
     }
     
-    ///@dev Defines the main wallets for the application to work
-    ///@param sender
-    ///@param heirFullName:
-    ///@param dateOfBirth:
-    ///@param timeOfBirth:
-    ///@param place:
-    ///@param motherFullName:
-    ///@param fatherFullName:
+    ///@dev Displays Heir data based on their unique hash.
+    ///@param hash An unique hash based on all Heir attributes. Should be encrypted externally.
        
-    function getDocument(string hash) external view returns(address sender, string heirFullName, uint dateOfBirth, uint timeOfBirth,
-                                                                  string place, string motherFullName, string fatherFullName){
+    function getDocument(string hash)
+    external 
+    view 
+    returns(string result,
+            string heirFullName, 
+            string motherFullName, 
+            string fatherFullName, 
+            uint dateOfBirth, 
+            uint timeOfBirth, 
+            string placeOfBirth){
 
-        require(documents[hash].stored);
+        if(documents[hash].stored){
+            result = "Heir record found.";
+        }else{
+            result = "Heir not found.";
+        }
         
-        return(documents[hash].sender, documents[hash].dateOfBirth, documents[hash].timeOfBirth,
-               documents[hash].heirFullName, documents[hash].place, documents[hash].motherFullName,
-               documents[hash].fatherFullName);
+        return(result,
+               documents[hash].heirFullName,
+               documents[hash].motherFullName, 
+               documents[hash].fatherFullName,
+               documents[hash].dateOfBirth, 
+               documents[hash].timeOfBirth, 
+               documents[hash].placeOfBirth);
 
     }
     
-    
-    
-
-
 }

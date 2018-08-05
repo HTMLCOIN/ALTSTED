@@ -38,6 +38,7 @@ contract myoffspring{
                      string placeOfBirth) 
     internal{
         
+        //At least Hash, Heir Full Name and Date of Birth are required.
         require(bytes(hash).length > 0);
         require(bytes(heirFullName).length > 0);
         require(dateOfBirth > 0);

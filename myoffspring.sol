@@ -4,8 +4,6 @@ pragma solidity ^0.4.24;
 ///@author andersonassis83 - adeassis@htmlcoin.team
 
 contract myoffspring{
-
-    address owner;
     
     struct Heir{
         bool stored;
@@ -21,18 +19,6 @@ contract myoffspring{
     mapping(string => Heir) internal heirs;
 
     event heirEvent(string hash);
-    
-    constructor() 
-    public{
-        owner = msg.sender;
-    }
-    
-    ///@dev Handles any funds sent to the contract by mistake
-    
-    function empty() 
-    public{
-        owner.transfer(address(this).balance);
-    }
     
     ///@dev Adds a new record to the blockchain containing all Heir's birth attributes. To be used internally only.
     ///@param hash An unique hash based on all Heir attributes. Should be encrypted externally.
@@ -131,6 +117,12 @@ contract myoffspring{
                heirs[hash].timeOfBirth, 
                heirs[hash].placeOfBirth);
 
+    }
+    
+    ///@dev Throw if any coin is received
+    
+    function() public payable {
+        revert();
     }
     
 }

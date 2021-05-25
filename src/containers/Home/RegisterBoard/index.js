@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -10,6 +10,7 @@ import 'aos/dist/aos.css';
 
 import ContainedButton from 'components/UI/Buttons/ContainedButton';
 import { MemoizedOutlinedTextField } from 'components/UI/OutlinedTextField';
+import { isEmpty } from 'utils/utility';
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -39,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     },
     cardActions: {
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
         padding: theme.spacing(2, 2, 4, 2),
@@ -53,33 +54,57 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const RegisterBoard = ({ setIsDialog }) => {
+const RegisterBoard = ({ setIsDialog, account, state, setState }) => {
     const classes = useStyles();
     const onClickHandler = () => {
         setIsDialog(true);
     }
 
+    const inputChangeHandler = useCallback(event => {
+        const { name, value } = event.target;
+        setState(prevState => ({
+            ...prevState, [name]: value
+        }));
+    }, []);
+
     return (
         <Grid container justify='center'>
-            <Grid container item xs={3}>
+            <Grid container item xs={4}>
                 <Card className={classes.card}>
                     <CardContent className={classes.cardContent}>
                         <div className={classes.imageContainer}>
                             <MemoizedOutlinedTextField
                                 placeholder='URL'
+                                name='search'
+                                value={state.search || ''}
+                                onChange={inputChangeHandler}
                             />
                             <img width={64} height={64} style={{ marginLeft: 40 }} alt='althash' src='/assets/images/althash.png' />
                         </div>
-                        <Typography variant='h6'> Register or Search for you Off</Typography>
-                        <Typography variant='h6'>Spring on the Althash Blockchain</Typography>
+                        {isEmpty(account) ?
+                            <>
+                                <Typography variant='h6'> Register or Search for you Off</Typography>
+                                <Typography variant='h6'>Spring on the Althash Blockchain</Typography>
+                            </>
+                            :
+                            <Typography variant='body1' color='secondary'> Please Type in Registered Name : Example : John Dae</Typography>
+                        }
                     </CardContent>
                     <CardActions className={classes.cardActions}>
-                        <ContainedButton style={{ backgroundColor: '#16ACE2' }}>
-                            Search
-                        </ContainedButton>
-                        <ContainedButton onClick={onClickHandler} style={{ backgroundColor: '#4caf50' }}>
-                            Register
-                        </ContainedButton>
+                        {isEmpty(account)
+                            ?
+                            <>
+                                <ContainedButton style={{ backgroundColor: '#16ACE2' }}>
+                                    Search
+                                </ContainedButton>
+                                <ContainedButton onClick={onClickHandler} style={{ backgroundColor: '#4caf50' }}>
+                                    Register
+                                </ContainedButton>
+                            </>
+                            :
+                            <ContainedButton style={{ backgroundColor: '#16ACE2' }}>
+                                Search
+                            </ContainedButton>}
                     </CardActions>
                 </Card>
             </Grid>

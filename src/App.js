@@ -32,6 +32,11 @@ const App = () => {
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [layout] = useState(false)
   const [isWalletDialog, setIsWalletDialog] = useState(false);
+  const [account, setAccount] = useState();
+  const [notificationData, setNotificationData] = useState({
+    notifications: [],
+    notificationType: ''
+  })
 
   const openCloseDialogHandler = show => () => {
     setIsWalletDialog(show)
@@ -50,9 +55,14 @@ const App = () => {
     <AppContext.Provider
       value={{
         loadingInfo,
-        setLoadingInfo
+        setLoadingInfo,
+        setNotificationData,
+        setAccount,
+        account
       }}>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider
+        theme={theme}
+      >
         <SnackbarProvider
           classes={{
             variantSuccess: classes.primaryTextColor,
@@ -66,7 +76,7 @@ const App = () => {
           }}
           maxSnack={3}>
           <CssBaseline />
-          <Notifications notifications={''} notificationType={'success'} />
+          <Notifications notifications={notificationData.notifications} notificationType={notificationData.notificationType} />
           <Suspense fallback={<LoadingSpinner wholeOverlay />}>
             <Layout layout={layout}>
               <Switch>

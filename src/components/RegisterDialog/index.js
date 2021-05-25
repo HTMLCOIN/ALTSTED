@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AppContext } from 'contexts';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -60,11 +61,15 @@ const useStyles = makeStyles(theme => ({
 const RegisterDialog = ({ open, onClose, headerTitle }) => {
     const classes = useStyles();
     const dialogClasses = dialogStyles();
-
-    const [state, setState] = useState({});
+    const { setNotificationData, setAccount } = useContext(AppContext);
 
     const onFormSubmit = async (ev) => {
-        ev.preventDefault()
+        ev.preventDefault();
+        setAccount('hTg2fMAXsCvV4J7WAy2mee4fEgQh1dJ1ig');
+        setNotificationData({
+            notifications : ['Altmask wallet successfully connected!'],
+            notificationType : 'success'
+        })
         onClose();
     }
 
@@ -88,7 +93,7 @@ const RegisterDialog = ({ open, onClose, headerTitle }) => {
                         </Typography>
                     </DialogContent>
                     <div className={classes.dialogActions}>
-                        <RadiusButton variant='outlined'>
+                        <RadiusButton onClick = {onFormSubmit} variant='outlined'>
                             <Typography variant='body1'>
                                 Connect Altmask
                             </Typography>

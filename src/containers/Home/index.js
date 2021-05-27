@@ -35,7 +35,6 @@ const Home = () => {
     setIsDialog(show);
   }
 
-  console.log('kevin account =>', account)
   return (
     <div className={classes.root} >
       <RegisterBoard

@@ -16,10 +16,12 @@ import { PAGES } from 'utils/links/pages';
 import WalletModal from 'components/WalletModal';
 import LoadingSpinner from 'components/LoadingSpinner'
 import Notifications from 'components/Notifications';
+import { useEagerConnect } from 'utils/hooks';
+
+import { useQrypto } from 'utils/libs/altmask';
 
 const DELAY_TIME = 100;
 const Home = loadable(() => pMinDelay(import('containers/Home'), DELAY_TIME));
-
 const useStyles = makeStyles(() => ({
   primaryTextColor: {
     color: '#fff'
@@ -29,6 +31,12 @@ const useStyles = makeStyles(() => ({
 const App = () => {
   const classes = useStyles();
 
+  const htmlcoinObject = useQrypto();
+
+  console.log('kevin object for the html===>', htmlcoinObject)
+
+
+  useEagerConnect();
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [layout] = useState(false)
   const [isWalletDialog, setIsWalletDialog] = useState(false);
@@ -37,6 +45,7 @@ const App = () => {
     notifications: [],
     notificationType: ''
   })
+
 
   const openCloseDialogHandler = show => () => {
     setIsWalletDialog(show)
@@ -77,7 +86,8 @@ const App = () => {
           maxSnack={3}>
           <CssBaseline />
           <Notifications notifications={notificationData.notifications} notificationType={notificationData.notificationType} />
-          <Suspense fallback={<LoadingSpinner wholeOverlay />}>
+          <Suspense fallback={
+            <LoadingSpinner wholeOverlay />}>
             <Layout layout={layout}>
               <Switch>
                 <Route render={() => (

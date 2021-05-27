@@ -7,6 +7,9 @@ import App from './App';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 
+// window.postMessage({ message: { type: 'CONNECT_HTMLCOINCHROME' } }, '*')
+// window.alert('success')
+
 const app = (
   <BrowserRouter>
     <App />

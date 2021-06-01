@@ -19,7 +19,6 @@ const styles = (theme) => {
       flexDirection: 'column',
       justifyContent: 'space-between',
       cursor: 'pointer',
-      // borderRadius: 20,
       '&:hover': {
         transform: 'translateY(-5px)',
         transition: `ease-out 0.4s `,

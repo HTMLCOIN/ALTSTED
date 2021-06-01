@@ -30,7 +30,6 @@ const useStyles = makeStyles(() => ({
 const App = () => {
   const classes = useStyles();
 
-  const htmlcoinObject = useQrypto();
 
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [layout] = useState(false)
@@ -41,6 +40,22 @@ const App = () => {
     notificationType: ''
   })
 
+  const [htmlState, setHtmlState] = useState({
+    extensionId: 'pdcafmmpfphfnngcbpiopmafdjgpbakg',
+    extensionInstalled: false,
+    connected: false,
+    height: 0,
+    account: null,
+    tolerance: 0.5,
+    deadline: 20,
+    tokens: [],
+    txs: [],
+  })
+
+
+  const html = useQrypto(htmlState.extensionId);
+   console.log('kevin html===>', html)
+  
 
   const openCloseDialogHandler = show => () => {
     setIsWalletDialog(show)
@@ -62,7 +77,9 @@ const App = () => {
         setLoadingInfo,
         setNotificationData,
         setAccount,
-        account
+        account,
+        htmlState, 
+        setHtmlState 
       }}>
       <ThemeProvider
         theme={theme}

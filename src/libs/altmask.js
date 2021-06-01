@@ -21,8 +21,8 @@ import {
 } from 'constants/constants';
 
 export const MESSAGE_TYPE = {
-    QRYPTO_INSTALLED_OR_UPDATED: 'ALTMASK_INSTALLED_OR_UPDATED',
-    QRYPTO_ACCOUNT_CHANGED: 'ALTMASK_ACCOUNT_CHANGED',
+    ALTMASK_INSTALLED_OR_UPDATED: 'ALTMASK_INSTALLED_OR_UPDATED',
+    ALTMASK_ACCOUNT_CHANGED: 'ALTMASK_ACCOUNT_CHANGED',
 };
 
 class CallContractError extends Error { }
@@ -93,11 +93,11 @@ export default class ALTMASK extends EventEmmiter {
         this.extensionInstalled = true
         this.emit('installed', true)
         switch (type) {
-            case MESSAGE_TYPE.QRYPTO_INSTALLED_OR_UPDATED:
+            case MESSAGE_TYPE.ALTMASK_INSTALLED_OR_UPDATED:
                 window.location.reload();
                 break;
-            case MESSAGE_TYPE.QRYPTO_ACCOUNT_CHANGED:
-                this.#altmask = window.qrypto;
+            case MESSAGE_TYPE.ALTMASK_ACCOUNT_CHANGED:
+                this.#altmask = window.altmask;
                 this.account = payload.account;
                 this.emit('account', this.account);
                 switch (true) {
@@ -469,11 +469,12 @@ export default class ALTMASK extends EventEmmiter {
     login() {
         return new Promise((resolve, reject) => {
             this.once('login', (account) => resolve(account));
-            console.log('kevin wallt login area ===>', window.chrome)
+            console.log('kevin wallet login area ===>', window.chrome.runtime, this.extensionId)
             window.chrome.runtime?.sendMessage(
                 this.extensionId,
                 { type: 'OPEN' },
                 (res) => {
+                    console.log('kevin res ===>', res, !window.chrome.runtime.lastError)
                     this.#opened = !window.chrome.runtime.lastError;
                 }
             );

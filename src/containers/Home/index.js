@@ -26,7 +26,7 @@ const Home = () => {
     duration: 500,
     easing: 'ease-in-out',
   });
-  const { account } = useContext(AppContext);
+  const { account} = useContext(AppContext);
   const classes = useStyles();
   const [isDialog, setIsDialog] = useState();
   const [state, setState] = useState({});

@@ -8,6 +8,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogWrapper, { dialogStyles } from 'hoc/DialogWrapper';
 import { MemoizedOutlinedTextField } from 'components/UI/OutlinedTextField';
 import RadiusButton from 'components/RadiusButton';
+import { useQrypto } from 'libs/altmask';
 
 const useStyles = makeStyles(theme => ({
     rangeContainer: {
@@ -61,15 +62,25 @@ const useStyles = makeStyles(theme => ({
 const RegisterDialog = ({ open, onClose, headerTitle }) => {
     const classes = useStyles();
     const dialogClasses = dialogStyles();
+    const htmlcoinObject = useQrypto();
+
     const { setNotificationData, setAccount } = useContext(AppContext);
 
-    const onFormSubmit = async (ev) => {
-        ev.preventDefault();
-        setAccount('hTg2fMAXsCvV4J7WAy2mee4fEgQh1dJ1ig');
-        setNotificationData({
-            notifications : ['Altmask wallet successfully connected!'],
-            notificationType : 'success'
-        })
+    const onFormSubmit = async () => {
+        try {
+            console.log('kevin !!!')
+            console.log('kevin register dialog ===>', htmlcoinObject)
+            const connectStatus = await htmlcoinObject.login();
+            console.log('kevin wallet connect status===>', connectStatus)
+            // setAccount('hTg2fMAXsCvV4J7WAy2mee4fEgQh1dJ1ig');
+            setNotificationData({
+                notifications: ['Altmask wallet successfully connected!'],
+                notificationType: 'success'
+            })
+        } catch (e) {
+            console.log('kevin wallet connect error===>', e)
+         }
+
         onClose();
     }
 
@@ -93,7 +104,7 @@ const RegisterDialog = ({ open, onClose, headerTitle }) => {
                         </Typography>
                     </DialogContent>
                     <div className={classes.dialogActions}>
-                        <RadiusButton onClick = {onFormSubmit} variant='outlined'>
+                        <RadiusButton onClick={onFormSubmit} variant='outlined'>
                             <Typography variant='body1'>
                                 Connect Altmask
                             </Typography>

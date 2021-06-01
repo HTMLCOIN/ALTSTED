@@ -16,9 +16,8 @@ import { PAGES } from 'utils/links/pages';
 import WalletModal from 'components/WalletModal';
 import LoadingSpinner from 'components/LoadingSpinner'
 import Notifications from 'components/Notifications';
-import { useEagerConnect } from 'utils/hooks';
 
-import { useQrypto } from 'utils/libs/altmask';
+import { useQrypto } from 'libs/altmask';
 
 const DELAY_TIME = 100;
 const Home = loadable(() => pMinDelay(import('containers/Home'), DELAY_TIME));
@@ -33,10 +32,6 @@ const App = () => {
 
   const htmlcoinObject = useQrypto();
 
-  console.log('kevin object for the html===>', htmlcoinObject)
-
-
-  useEagerConnect();
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [layout] = useState(false)
   const [isWalletDialog, setIsWalletDialog] = useState(false);

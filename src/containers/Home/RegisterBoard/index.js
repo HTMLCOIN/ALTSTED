@@ -11,7 +11,6 @@ import 'aos/dist/aos.css';
 import ContainedButton from 'components/UI/Buttons/ContainedButton';
 import { MemoizedOutlinedTextField } from 'components/UI/OutlinedTextField';
 import { isEmpty } from 'utils/utility';
-import { useQrypto } from 'utils/libs/altmask';
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -57,9 +56,7 @@ const useStyles = makeStyles(theme => ({
 
 const RegisterBoard = ({ setIsDialog, account, state, setState }) => {
     const classes = useStyles();
-    const altmask = useQrypto()
     const registerHandler = async () => {
-        await altmask.login();
         setIsDialog(true);
     }
 

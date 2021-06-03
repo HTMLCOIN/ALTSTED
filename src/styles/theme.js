@@ -55,6 +55,50 @@ const theme = responsiveFontSizes(createMuiTheme({
       topAppBarHeight: 47,
       footerHeight: 77
     },
+  },
+  overrides: {
+    MuiPopover: {
+      root: {
+        zIndex: `${3000} !important`,
+      },
+      paper: {
+        background: '#292C41',
+      }
+    },
+    MuiPickersCalendarHeader: {
+      iconButton: {
+        backgroundColor: 'transparent',
+        color: '#fff'
+      },
+      dayLabel: {
+        color: '#fff'
+      },
+      daysHeader: {
+        border: `1px solid #555E7F`,
+        borderLeft: 'none',
+        borderRight: 'none',
+        marginLeft: 4,
+        marginRight: 4,
+        height: 36,
+        maxHeight: 36,
+      },
+      transitionContainer: {
+        '& > p': {
+          fontSize: 16,
+          fontWeight: 500
+        }
+      }
+    },
+    MuiPickersDay: {
+      daySelected: {
+        borderRadius: 0,
+        backgroundColor: '#A20F3C4D', // 4D = 30%
+        color: '#A20F3C',
+        '&:hover': {
+          backgroundColor: '#A20F3C4D'
+        }
+      }
+    },
   }
 }));
 

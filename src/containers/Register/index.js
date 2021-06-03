@@ -10,7 +10,8 @@ import 'aos/dist/aos.css';
 
 import ContainedButton from 'components/UI/Buttons/ContainedButton';
 import { MemoizedOutlinedTextField } from 'components/UI/OutlinedTextField';
-import { isEmpty } from 'utils/utility';
+import DatePicker from 'components/UI/DatePicker';
+import TimePicker from 'components/UI/TimePicker';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -75,6 +76,10 @@ const Register = ({ }) => {
         }));
     }, []);
 
+    const onSelectHandler = (value, name) => {
+        setState(prevState => ({ ...prevState, [name]: value }));
+    };
+
     return (
         <div className={classes.root}>
             <Grid container justify='center'>
@@ -128,22 +133,21 @@ const Register = ({ }) => {
                                     <Typography>Date of Birth : </Typography>
                                 </Grid>
                                 <Grid item item xs={6}>
-                                    <MemoizedOutlinedTextField
-                                        placeholder='Date of Birth'
+                                    <DatePicker
                                         name='dateOfBirth'
-                                        value={state.dateOfBirth || ''}
-                                        onChange={inputChangeHandler}
-                                    />
+                                        placeholder='Date of Birth'
+                                        value={state.dateOfBirth}
+                                        onChange={onSelectHandler} />
                                 </Grid>
                                 <Grid item xs={4}>
                                     <Typography>Time of Birth : </Typography>
                                 </Grid>
                                 <Grid item item xs={6}>
-                                    <MemoizedOutlinedTextField
-                                        placeholder='Time of Birth'
+                                    <TimePicker
                                         name='timeOfBirth'
-                                        value={state.timeOfBirth || ''}
-                                        onChange={inputChangeHandler}
+                                        placeholder='Time of Birth'
+                                        value={state.timeOfBirth}
+                                        onChange={onSelectHandler}
                                     />
                                 </Grid>
                                 <Grid item xs={4}>

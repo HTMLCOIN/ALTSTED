@@ -88,7 +88,7 @@ const Search = ({ }) => {
                                     value={state.search || ''}
                                     onChange={inputChangeHandler}
                                 />
-                                <img width={64} height={64} style={{ marginLeft: 40 }} alt='althash' src='/assets/images/althash.png' />
+                                <img width={64} height={64} style={{ marginLeft: 32 }} alt='althash' src='/assets/images/althash.png' />
                             </div>
                             <Typography variant='body1' color='secondary'> Please Type in Registered Name : Example : John Dae</Typography>
                         </CardContent>

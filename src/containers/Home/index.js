@@ -26,10 +26,11 @@ const Home = () => {
     duration: 500,
     easing: 'ease-in-out',
   });
-  const { account} = useContext(AppContext);
+  const { htmlState } = useContext(AppContext);
   const classes = useStyles();
   const [isDialog, setIsDialog] = useState();
   const [state, setState] = useState({});
+  const [action, setAction] = useState('')
 
   const openCloseDialogHandler = show => () => {
     setIsDialog(show);
@@ -39,17 +40,19 @@ const Home = () => {
     <div className={classes.root} >
       <RegisterBoard
         setIsDialog={setIsDialog}
-        account={account}
+        account={htmlState?.account?.address}
         setState={setState}
         state={state}
+        setAction={setAction}
       />
       {
         isDialog &&
         <RegisterDialog
           setState={setState}
-          statte={state}
+          state={state}
           headerTitle={'Connect Altmask Wallet'}
           open={true}
+          action={action}
           onClose={openCloseDialogHandler(false)}
         />
       }

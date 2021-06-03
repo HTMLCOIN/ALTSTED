@@ -18,9 +18,12 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import Notifications from 'components/Notifications';
 
 import { useQrypto } from 'libs/altmask';
+import { isEmpty } from 'utils/utility';
 
 const DELAY_TIME = 100;
 const Home = loadable(() => pMinDelay(import('containers/Home'), DELAY_TIME));
+const Register = loadable(() => pMinDelay(import('containers/Register'), DELAY_TIME));
+const Search = loadable(() => pMinDelay(import('containers/Search'), DELAY_TIME));
 const useStyles = makeStyles(() => ({
   primaryTextColor: {
     color: '#fff'
@@ -34,7 +37,6 @@ const App = () => {
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [layout] = useState(false)
   const [isWalletDialog, setIsWalletDialog] = useState(false);
-  const [account, setAccount] = useState();
   const [notificationData, setNotificationData] = useState({
     notifications: [],
     notificationType: ''
@@ -51,11 +53,6 @@ const App = () => {
     tokens: [],
     txs: [],
   })
-
-
-  const html = useQrypto(htmlState.extensionId);
-   console.log('kevin html===>', html)
-  
 
   const openCloseDialogHandler = show => () => {
     setIsWalletDialog(show)
@@ -76,10 +73,8 @@ const App = () => {
         loadingInfo,
         setLoadingInfo,
         setNotificationData,
-        setAccount,
-        account,
-        htmlState, 
-        setHtmlState 
+        htmlState,
+        setHtmlState
       }}>
       <ThemeProvider
         theme={theme}
@@ -105,6 +100,8 @@ const App = () => {
                 <Route render={() => (
                   <Switch>
                     <Route exact path={PAGES.HOME.url} component={Home} />
+                    <Route exact path={PAGES.SEARCH.url} component={Search} />
+                    <Route exact path={PAGES.REGISTER.url} component={Register} />
                   </Switch>
                 )} />
               </Switch>

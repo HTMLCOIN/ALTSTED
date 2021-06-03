@@ -21,8 +21,8 @@ import {
 } from 'constants/constants';
 
 export const MESSAGE_TYPE = {
-    QRYPTO_INSTALLED_OR_UPDATED: 'ALTMASK_INSTALLED_OR_UPDATED',
-    QRYPTO_ACCOUNT_CHANGED: 'ALTMASK_ACCOUNT_CHANGED',
+    ALTMASK_INSTALLED_OR_UPDATED: 'ALTMASK_INSTALLED_OR_UPDATED',
+    ALTMASK_ACCOUNT_CHANGED: 'ALTMASK_ACCOUNT_CHANGED',
 };
 
 class CallContractError extends Error { }
@@ -45,7 +45,6 @@ export default class ALTMASK extends EventEmmiter {
             // eslint-disable-next-line no-console
             console.warn('Something wrong', err);
         });
-        console.log('kevin extensionId===>', window)
         this.checkInstalled();
     }
     setExtensionId(extensionId) {
@@ -93,11 +92,11 @@ export default class ALTMASK extends EventEmmiter {
         this.extensionInstalled = true
         this.emit('installed', true)
         switch (type) {
-            case MESSAGE_TYPE.QRYPTO_INSTALLED_OR_UPDATED:
+            case MESSAGE_TYPE.ALTMASK_INSTALLED_OR_UPDATED:
                 window.location.reload();
                 break;
-            case MESSAGE_TYPE.QRYPTO_ACCOUNT_CHANGED:
-                this.#altmask = window.qrypto;
+            case MESSAGE_TYPE.ALTMASK_ACCOUNT_CHANGED:
+                this.#altmask = window.altmask;
                 this.account = payload.account;
                 this.emit('account', this.account);
                 switch (true) {
@@ -144,39 +143,6 @@ export default class ALTMASK extends EventEmmiter {
         // );
     }
 
-    getTotalSupply(token, forceUpdate = false) {
-        // return useCache(
-        //     ['totalSupply', token],
-        //     () => this.return(token.address, ABI.QRC20, 'totalSupply'),
-        //     600,
-        //     forceUpdate
-        // );
-    }
-
-    swap(method, params, value = 0, { gasLimitPlus = 0 } = {}) {
-        return this.safeSendToContract(this.router, ABI.ROUTER, method, params, {
-            qtumAmount: value,
-            gasLimitPlus,
-        });
-    }
-
-    async getPair(tokenA, tokenB) {
-        [tokenA, tokenB] = sortTokens(tokenA, tokenB);
-        // const pair = await usePersist(
-        //     ['getPair', this.factory, tokenA, tokenB],
-        //     async () => {
-        //         const pair = this.unwrapHex(
-        //             await this.return(this.factory, ABI.FACTORY, 'getPair', [
-        //                 this.wrapHex(tokenA.address),
-        //                 this.wrapHex(tokenB.address),
-        //             ])
-        //         );
-        //         return pair === ZERO_ADDRESS ? undefined : pair;
-        //     }
-        // );
-        // return pair || ZERO_ADDRESS;
-    }
-
     async getAmountsIn(amountOut, [tokenA, tokenB]) {
         const reserves = await this.getReserves(tokenA, tokenB);
         const amountIn = this.getAmountIn(amountOut, reserves[0], reserves[1]);
@@ -210,39 +176,10 @@ export default class ALTMASK extends EventEmmiter {
         return numerator.idiv(denominator);
     }
 
-    async getReserves(tokenA, tokenB, forceUpdate = false) {
-        const [token0, token1] = sortTokens(tokenA, tokenB);
-        // try {
-        //     const [reserve0, reserve1] = await useCache(
-        //         ['getReserves', tokenA, tokenB],
-        //         () => {
-        //             return this.return(this.router, ABI.ROUTER, 'getReserves', [
-        //                 this.wrapHex(this.factory),
-        //                 this.wrapHex(token0.address),
-        //                 this.wrapHex(token1.address),
-        //             ]);
-        //         },
-        //         600,
-        //         forceUpdate
-        //     );
-        //     return token0 === tokenA ? [reserve0, reserve1] : [reserve1, reserve0];
-        // } catch (e) {
-        //     return [BigNumber(0), BigNumber(0)];
-        // }
-    }
 
     async shouldApprove(token) {
         const allowance = await this.allowance(token);
         return BigNumber(allowance).eq(0);
-    }
-
-    allowance(token) {
-        // return useCache(['allowance', token.address], () =>
-        //     this.return(token.address, ABI.QRC20, 'allowance', [
-        //         this.wrapHex(this.hexAddress),
-        //         this.wrapHex(this.router),
-        //     ])
-        // );
     }
 
     async tryToApprove(token, amount) {
@@ -469,11 +406,12 @@ export default class ALTMASK extends EventEmmiter {
     login() {
         return new Promise((resolve, reject) => {
             this.once('login', (account) => resolve(account));
-            console.log('kevin wallt login area ===>', window.chrome)
+            console.log('kevin wallet login area ===>', window.chrome.runtime, this.extensionId)
             window.chrome.runtime?.sendMessage(
                 this.extensionId,
                 { type: 'OPEN' },
                 (res) => {
+                    console.log('kevin res ===>', res, !window.chrome.runtime.lastError)
                     this.#opened = !window.chrome.runtime.lastError;
                 }
             );

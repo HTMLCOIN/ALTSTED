@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -13,7 +13,14 @@ import { MemoizedOutlinedTextField } from 'components/UI/OutlinedTextField';
 import { isEmpty } from 'utils/utility';
 
 const useStyles = makeStyles(theme => ({
-    root: {},
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: `calc(100vh - ${theme.custom.layout.topAppBarHeight}px)`,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     card: {
         backgroundColor: theme.palette.background.default,
         display: 'flex',
@@ -54,15 +61,11 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const RegisterBoard = ({ setIsDialog, state, setState, setAction }) => {
+const Search = ({ }) => {
     const classes = useStyles();
-    const registerHandler = async () => {
-        setIsDialog(true);
-        setAction('register');
-    }
+    const [state, setState] = useState({});
     const searchHandler = async () => {
-        setIsDialog(true);
-        setAction('search');
+
     }
 
     const inputChangeHandler = useCallback(event => {
@@ -73,34 +76,32 @@ const RegisterBoard = ({ setIsDialog, state, setState, setAction }) => {
     }, []);
 
     return (
-        <Grid container justify='center'>
-            <Grid container item xs={4}>
-                <Card className={classes.card}>
-                    <CardContent className={classes.cardContent}>
-                        <div className={classes.imageContainer}>
-                            <MemoizedOutlinedTextField
-                                placeholder='URL'
-                                name='search'
-                                value={state.search || ''}
-                                onChange={inputChangeHandler}
-                            />
-                            <img width={64} height={64} style={{ marginLeft: 40 }} alt='althash' src='/assets/images/althash.png' />
-                        </div>
-                        <Typography variant='h6'> Register or Search for you Off</Typography>
-                        <Typography variant='h6'>Spring on the Althash Blockchain</Typography>
-                    </CardContent>
-                    <CardActions className={classes.cardActions}>
-                        <ContainedButton onClick={searchHandler} style={{ backgroundColor: '#16ACE2' }}>
-                            Search
-                        </ContainedButton>
-                        <ContainedButton onClick={registerHandler} style={{ backgroundColor: '#4caf50' }}>
-                            Register
-                        </ContainedButton>
-                    </CardActions>
-                </Card>
+        <div className={classes.root}>
+            <Grid container justify='center'>
+                <Grid container item xs={4}>
+                    <Card className={classes.card}>
+                        <CardContent className={classes.cardContent}>
+                            <div className={classes.imageContainer}>
+                                <MemoizedOutlinedTextField
+                                    placeholder='URL'
+                                    name='search'
+                                    value={state.search || ''}
+                                    onChange={inputChangeHandler}
+                                />
+                                <img width={64} height={64} style={{ marginLeft: 32 }} alt='althash' src='/assets/images/althash.png' />
+                            </div>
+                            <Typography variant='body1' color='secondary'> Please Type in Registered Name : Example : John Dae</Typography>
+                        </CardContent>
+                        <CardActions className={classes.cardActions}>
+                            <ContainedButton onClick={searchHandler} style={{ backgroundColor: '#16ACE2' }}>
+                                Search
+                            </ContainedButton>
+                        </CardActions>
+                    </Card>
+                </Grid>
             </Grid>
-        </Grid>
+        </div>
     );
 };
 
-export default RegisterBoard;
+export default Search;

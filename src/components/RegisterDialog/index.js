@@ -4,11 +4,13 @@ import { AppContext } from 'contexts';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import DialogContent from '@material-ui/core/DialogContent';
+import { useHistory } from "react-router-dom";
 
 import DialogWrapper, { dialogStyles } from 'hoc/DialogWrapper';
 import { MemoizedOutlinedTextField } from 'components/UI/OutlinedTextField';
 import RadiusButton from 'components/RadiusButton';
 import { useQrypto } from 'libs/altmask';
+import { isEmpty } from 'utils/utility';
 
 const useStyles = makeStyles(theme => ({
     rangeContainer: {
@@ -59,28 +61,30 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const RegisterDialog = ({ open, onClose, headerTitle }) => {
+const RegisterDialog = ({ open, onClose, headerTitle, state, action }) => {
+
     const classes = useStyles();
     const dialogClasses = dialogStyles();
     const htmlcoinObject = useQrypto();
+    const history = useHistory();
 
-    const { setNotificationData, setAccount } = useContext(AppContext);
+    const { setNotificationData, setHtmlState, htmlState } = useContext(AppContext);
 
     const onFormSubmit = async () => {
         try {
             console.log('kevin !!!')
-            console.log('kevin register dialog ===>', htmlcoinObject)
-            const connectStatus = await htmlcoinObject.login();
-            console.log('kevin wallet connect status===>', connectStatus)
-            // setAccount('hTg2fMAXsCvV4J7WAy2mee4fEgQh1dJ1ig');
+            console.log('kevin register dialog ===>', htmlcoinObject.account)
+            setHtmlState({ account: htmlcoinObject?.account })
             setNotificationData({
                 notifications: ['Altmask wallet successfully connected!'],
                 notificationType: 'success'
             })
+            if (!isEmpty(action)) {
+                history.push(`/${action}`)
+            }
         } catch (e) {
             console.log('kevin wallet connect error===>', e)
-         }
-
+        }
         onClose();
     }
 
@@ -93,6 +97,7 @@ const RegisterDialog = ({ open, onClose, headerTitle }) => {
                         <div className={classes.content}>
                             <MemoizedOutlinedTextField
                                 placeholder='URL'
+                                value={state.search}
                             />
                             <div className={classes.imageContainer}>
                                 <img width={40} height={40} alt='althash' src='/assets/images/althash.png' />

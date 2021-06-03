@@ -18,9 +18,12 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import Notifications from 'components/Notifications';
 
 import { useQrypto } from 'libs/altmask';
+import { isEmpty } from 'utils/utility';
 
 const DELAY_TIME = 100;
 const Home = loadable(() => pMinDelay(import('containers/Home'), DELAY_TIME));
+const Register = loadable(() => pMinDelay(import('containers/Register'), DELAY_TIME));
+const Search = loadable(() => pMinDelay(import('containers/Search'), DELAY_TIME));
 const useStyles = makeStyles(() => ({
   primaryTextColor: {
     color: '#fff'
@@ -30,17 +33,26 @@ const useStyles = makeStyles(() => ({
 const App = () => {
   const classes = useStyles();
 
-  const htmlcoinObject = useQrypto();
 
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [layout] = useState(false)
   const [isWalletDialog, setIsWalletDialog] = useState(false);
-  const [account, setAccount] = useState();
   const [notificationData, setNotificationData] = useState({
     notifications: [],
     notificationType: ''
   })
 
+  const [htmlState, setHtmlState] = useState({
+    extensionId: 'pdcafmmpfphfnngcbpiopmafdjgpbakg',
+    extensionInstalled: false,
+    connected: false,
+    height: 0,
+    account: null,
+    tolerance: 0.5,
+    deadline: 20,
+    tokens: [],
+    txs: [],
+  })
 
   const openCloseDialogHandler = show => () => {
     setIsWalletDialog(show)
@@ -61,8 +73,8 @@ const App = () => {
         loadingInfo,
         setLoadingInfo,
         setNotificationData,
-        setAccount,
-        account
+        htmlState,
+        setHtmlState
       }}>
       <ThemeProvider
         theme={theme}
@@ -88,6 +100,8 @@ const App = () => {
                 <Route render={() => (
                   <Switch>
                     <Route exact path={PAGES.HOME.url} component={Home} />
+                    <Route exact path={PAGES.SEARCH.url} component={Search} />
+                    <Route exact path={PAGES.REGISTER.url} component={Register} />
                   </Switch>
                 )} />
               </Switch>

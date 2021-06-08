@@ -12,6 +12,9 @@ import ContainedButton from 'components/UI/Buttons/ContainedButton';
 import { MemoizedOutlinedTextField } from 'components/UI/OutlinedTextField';
 import DatePicker from 'components/UI/DatePicker';
 import TimePicker from 'components/UI/TimePicker';
+import { useQrypto } from 'libs/altmask';
+import { offSpringContractAddress } from 'contract/contractAddress';
+import { oppSpringContractABI } from 'contract/abi';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -62,11 +65,12 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Register = ({ }) => {
+const Register = () => {
     const classes = useStyles();
     const [state, setState] = useState({});
+    const html = useQrypto()
     const submitHandler = async () => {
-
+        html.callContract(offSpringContractAddress, oppSpringContractABI, 'newHeir', ['123', '123', '123','123',123,123,'123'])
     }
 
     const inputChangeHandler = useCallback(event => {

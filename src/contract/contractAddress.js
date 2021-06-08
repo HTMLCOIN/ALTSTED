@@ -1,2 +1,2 @@
 
-export const offSpringContractAddress = '8a99c23452d10778b08417ea4e8669ead73b4c71'
+export const offSpringContractAddress = '15c2dc07a658010f03e95b8891ac88dbba9543d9'

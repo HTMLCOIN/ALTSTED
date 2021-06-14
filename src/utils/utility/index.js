@@ -8,6 +8,15 @@ const isEmpty = value => {
   );
 };
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 export {
-  isEmpty
+  isEmpty,
+  delay
+};
+
+
+export {
+  isEmpty,
+  delay
 };

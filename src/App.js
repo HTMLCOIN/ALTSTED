@@ -33,7 +33,6 @@ const useStyles = makeStyles(() => ({
 const App = () => {
   const classes = useStyles();
 
-
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [layout] = useState(false)
   const [isWalletDialog, setIsWalletDialog] = useState(false);

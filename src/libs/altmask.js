@@ -4,8 +4,6 @@ import html from 'htmlcoinjs-lib';
 import abi from 'ethjs-abi';
 import BigNumber from 'bignumber.js';
 import axios from 'axios';
-import { sortTokens } from './utils';
-import { useCache, usePersist } from './cache';
 import Transaction from './transaction';
 
 import {
@@ -13,7 +11,6 @@ import {
     ROUTER,
     FACTORY,
     MAX_UINT_256,
-    ZERO_ADDRESS,
     TYPE_APPROVE,
     DOMAIN,
     NETWORK,
@@ -131,16 +128,6 @@ export default class ALTMASK extends EventEmmiter {
         if (!this.loggedIn || !token) {
             return BigNumber(0);
         }
-
-        // return useCache(
-        //     ['balanceOf', token, this.hexAddress],
-        //     () =>
-        //         this.return(token.address, ABI.QRC20, 'balanceOf', [
-        //             this.wrapHex(this.hexAddress),
-        //         ]),
-        //     600,
-        //     forceUpdate
-        // );
     }
 
     async getAmountsIn(amountOut, [tokenA, tokenB]) {
@@ -221,10 +208,11 @@ export default class ALTMASK extends EventEmmiter {
     }
 
     getAbiMethod(abiList, abiName) {
+        console.log('kevin abilist===>', abiList)
         // abiList = usePersist(['getAbiMethod', abiList], () =>
         //     Object.fromEntries(abiList.map((abi) => [abi.name, abi]))
         // );
-        // return abiList[abiName];
+        return abiList[1]; // TODO : hardcoded should be updtated soon it's only for the call contract
     }
 
     async sendToContract(
@@ -235,6 +223,7 @@ export default class ALTMASK extends EventEmmiter {
         { qtumAmount = 0, gasLimit = 250000, gasPrice = 40 } = {}
     ) {
         const method = this.getAbiMethod(abiList, abiName);
+        console.log('kevin method===>', method)
         const data = this.encodeMethod(method, params);
         try {
             this.emit('txWaiting');
@@ -343,6 +332,7 @@ export default class ALTMASK extends EventEmmiter {
 
     async callContract(address, abiList, abiName, params = []) {
         const method = this.getAbiMethod(abiList, abiName);
+        console.log('kevin get abi method ===>', method)
         const data = this.encodeMethod(method, params);
         try {
             const result = await this.rpcCall('callcontract', [address, data]);
@@ -406,12 +396,10 @@ export default class ALTMASK extends EventEmmiter {
     login() {
         return new Promise((resolve, reject) => {
             this.once('login', (account) => resolve(account));
-            console.log('kevin wallet login area ===>', window.chrome.runtime, this.extensionId)
             window.chrome.runtime?.sendMessage(
                 this.extensionId,
                 { type: 'OPEN' },
                 (res) => {
-                    console.log('kevin res ===>', res, !window.chrome.runtime.lastError)
                     this.#opened = !window.chrome.runtime.lastError;
                 }
             );

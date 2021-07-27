@@ -10,7 +10,6 @@ import 'aos/dist/aos.css';
 
 import ContainedButton from 'components/UI/Buttons/ContainedButton';
 import { MemoizedOutlinedTextField } from 'components/UI/OutlinedTextField';
-import { isEmpty } from 'utils/utility';
 
 const useStyles = makeStyles(theme => ({
     root: {
